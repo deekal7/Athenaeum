@@ -1,0 +1,78 @@
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "bootstrap/utils.html" as utils %}
+{% extends "base.html" %}
+{% block title %}{{ book.title }}{% endblock %}
+{% block body %}
+<div class="content-section">
+    <div class="outer">
+        <div class="middle">
+            <div class="inner">
+                <br/>
+                {{ utils.flashed_messages() }}
+                <br/>
+                <h1 style="text-align:center;">{{ book.title }}</h1>
+                <hr class="intro-divider">
+                <div class="center" style="width: 70vw">
+                    <div class="col-lg-6">
+                        <table class="table" >
+                            <tbody>
+                            <tr>
+                                <td><p>Book Title</p></td>
+                                <td>{{ book.title }}</td>
+                            </tr>
+                            <tr>
+                                <td><p>Genre</p></td>
+                                <td>{{ book.genre }}</td>
+                            </tr>
+                            <tr>
+                                <td><p>Author</p></td>
+                                <td>
+                                    {% for author in book.authors %}
+                                    {{ author.name }}
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><p>Publisher</p></td>
+                                <td>{{ publisher.name }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-lg-6">
+                        <table class="table" >
+                            <tbody>
+                            <tr>
+                                <td><p>Owner Name</p></td>
+                                <td>{{ owner.first_name }} {{ owner.last_name }}</td>
+                            </tr>
+                            <tr>
+                                <td><p>Owner Email</p></td>
+                                <td>{{ owner.email }}</td>
+                            </tr>
+                            {% if owner.phone %}
+                            <tr>
+                                <td><p>Owner Phone</p></td>
+                                <td>{{ owner.phone }}</td>
+                            </tr>
+                            {% endif %}
+                            {% if owner.city %}
+                            <tr>
+                                <td><p>Owner City</p></td>
+                                <td>{{ owner.city }}</td>
+                            </tr>
+                            {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-center">
+                        <a href="{{ url_for('user.borrow_book', id=book.id) }}">
+                            {{ wtf.quick_form(form) }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

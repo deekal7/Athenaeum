@@ -1,0 +1,47 @@
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "bootstrap/utils.html" as utils %}
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block body %}
+<div class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <br/>
+                {{ utils.flashed_messages() }}
+                <div class="intro-message">
+                    <h1>The Dashboard</h1>
+                    <hr class="intro-divider">
+                    <h3>Which book do you want to borrow?</h3>
+                    <div class="center">
+                        {{ wtf.quick_form(form, form_type="inline") }}
+                    </div>
+                    {% if show_results %}
+                    <hr class="intro-divider">
+                    <div class="center" style="overflow: auto; height: 45vh;">
+                        <table class="table table-striped" style="background-color: white; color: #555555;">
+                            <thead>
+                            <tr>
+                                <th class="text-center" width="25%"> ISBN </th>
+                                <th class="text-center" width="50%"> Title</th>
+                                <th class="text-center" width="25%"> Genre</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for book in books %}
+                            <tr>
+                                <td> {{ book.isbn }} </td>
+                                <td><a href="{{ url_for('user.borrow_book', id=book.id) }}"> {{ book.title }} </a></td>
+                                <td> {{ book.genre }} </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    {% endblock %}
