@@ -72,8 +72,42 @@ def borrow_book(id):
 @user.route('/profile/borrowed', methods=['GET', 'POST'])
 @login_required
 def list_borrowed():
-    books = Book.query.filter(Book.borrower_id == current_user.id).all()
-    return render_template('user/search/borrowed_books.html', books=books, title='Borrowed Books')
+    form = SearchForm()
+    if form.validate_on_submit():
+        choice = form.category.data
+        query = form.query.data
+        query = query.title()
+        books = []
+        if choice == 'Title':
+            books.extend(Book.query.filter(Book.title.contains(query), Book.borrower_id == current_user.id).all())
+        elif choice == 'Author':
+            authors = Author.query.filter(Author.name.contains(query)).all()
+            for author in authors:
+                for book in author.books:
+                    if book.borrower_id == current_user.id:
+                        books.append(book)
+        elif choice == 'Genre':
+            books.extend(Book.query.filter(Book.genre.contains(query), Book.borrower_id == current_user.id).all())
+        elif choice == 'City':
+            owners = User.query.filter(User.city.contains(query)).all()
+            for owner in owners:
+                for book in owner.owns_books:
+                    if book.borrower_id == current_user.id:
+                        books.append(book)
+        elif choice == 'Publisher':
+            publishers = Publisher.query.filter(Publisher.name.contains(query)).all()
+            for publisher in publishers:
+                for book in publisher.books:
+                    if book.borrower_id == current_user.id:
+                        books.append(book)
+        if books:
+            return render_template('user/search/borrowed_books.html', books=books, show_results=True,
+                                   form=form, title='Borrowed')
+        else:
+            flash('No books matching your search were found.')
+            return redirect(url_for('user.list_borrowed'))
+    return render_template('user/search/borrowed_books.html', books=None, show_results=False, form=form, title='Borrowed Books')
+
 
 
 @user.route('/profile/borrowed/delete/<int:id>', methods=['GET', 'POST'])
