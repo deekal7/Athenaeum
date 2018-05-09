@@ -11,13 +11,12 @@
                 {{ utils.flashed_messages() }}
                 <br/>
                 <h1 style="text-align:center;">Borrowed Books</h1>
-                <hr class="intro-divider">
                 <div class="center" style="text-align: center;">
                     {{ wtf.quick_form(form, form_type="inline") }}
                     <br/>
                     {% if show_results %}
                     <div style="overflow: auto; height: 45vh; text-align: center">
-                        <table class="table table-striped" style="background-color: white; color: #555555;">
+                        <table class="table">
                             <thead>
                             <tr>
                                 <th class="text-center" width="20%"> ISBN </th>
